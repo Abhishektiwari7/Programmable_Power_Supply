@@ -5,10 +5,11 @@
 #include "esp_log.h"
 #include "driver/gpio.h"
 #include "math.h"
-
+#include "driver/gptimer.h" //for timers
 #include "lcd.h"
 #include "image.h"
 #include "common.h" //simple function of adc , dac
+#include "interruptHandler.h" //timer and gpio interrupt
 
 //---bitbang pins------------------------------
 const int _CS    = 15;
@@ -19,7 +20,19 @@ const int _SID   = 23; // Mosi
 Nokia105 display( _SID,  _SCLK, _RESET, _CS);
 
 extern "C" void app_main(void) {
+//-----init-timer interrupt----------
+init_Interrupt_Timer0_Sec ();
+/////////////////////////////////
 
+//----init-switch pin---------
+init_Interrupt_Gpio (); 
+//use me for debounce: https://github.com/khoih-prog/ESP32TimerInterrupt/blob/master/examples/SwitchDebounce/SwitchDebounce.ino
+//////////////////////////////
+
+gpio_reset_pin(GPIO_LED);
+gpio_set_direction(GPIO_LED,GPIO_MODE_OUTPUT);
+//gpio_set_level(GPIO_LED,1);
+//---------------------DISPLAY SETUP----------------------------------------
 display.initDisplay();
 display.PWMinit();
 display.setLcdBrightness(100);   //max 512, duty cycle
@@ -27,11 +40,12 @@ display.setDrawPosition(128,160);
 display.backgroundColor(BLUE);
 display.displayClear();
 ESP_LOGI(TAG, "APP main - Display Setup Completed, Functions are Activated");
-
+/////////////////////////////////////////////////////////////////////////////
+//---------dac adc init-----------------------------------------------------
 init_peripherals ();
 init_Adc_Config ();
 set_Dac_Voltage (1500); //12 bit dac
-
+/////////////////////////////////////////////////////////////////////////////
 while (1) {
 float vcc = 0;
 float i = 1.1253;
@@ -56,6 +70,5 @@ display.printDigitFloat(w,4,50,70,GREEN,BLACK);
 
 
 vTaskDelay(pdMS_TO_TICKS(100)); //delay
-}
-
-}
+}// end of while
+}//end of main
