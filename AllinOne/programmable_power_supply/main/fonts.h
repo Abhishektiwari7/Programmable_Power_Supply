@@ -22,7 +22,16 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  **************************************************************************/
-#pragma once
+/*
+Written by Abhishek Tiwari
+*/
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef FONTS_H
+#define FONTS_H
+
 const  char  font8x16[][16]  = {
 {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},/*" ",0*/
 
@@ -207,3 +216,7 @@ const  char  font8x16[][16]  = {
 {0x00,0x00,0x00,0x00,0x00,0x7E,0x60,0x30,0x18,0x0C,0x06,0x7E,0x00,0x00,0x00,0x00},/*"z",90*/
 };
 
+#endif
+#ifdef __cplusplus
+}
+#endif// FONTS_H 

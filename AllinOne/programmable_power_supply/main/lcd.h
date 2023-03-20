@@ -22,7 +22,16 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  **************************************************************************/
-#pragma once
+/*
+Written by Abhishek Tiwari
+*/
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef LCD_H
+#define LCD_H
+
 
 #ifndef pgm_read_byte
 #define pgm_read_byte(addr) (*(const unsigned char *)(addr))
@@ -325,3 +334,8 @@ class Nokia105 final {
 				  SPIDEVICE_SCK; 
   //------Hardware spi-------
 };
+
+#endif
+#ifdef __cplusplus
+}
+#endif// LCD_H 

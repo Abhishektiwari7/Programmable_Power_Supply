@@ -24,7 +24,13 @@
  **************************************************************************/
 
 //Custom Spi Library Specific for display control
-#pragma once
+/*
+Written by Abhishek Tiwari
+*/
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef _LSPI_H
 #define _LSPI_H
 
@@ -35,3 +41,6 @@ uint32_t readSpi (const char len);
 uint32_t lcd_get_id();
 void spiInit(uint8_t  _SID, uint8_t _SCLK, uint8_t _CS,uint8_t _hwSPI1);
 #endif
+#ifdef __cplusplus
+}
+#endif// LSPI_H 

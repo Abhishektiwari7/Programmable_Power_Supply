@@ -10,6 +10,7 @@
 #include "image.h"
 #include "common.h" //simple function of adc , dac
 #include "interruptHandler.h" //timer and gpio interrupt
+#include "wifi_handler.h" //init wifi
 
 //---bitbang pins------------------------------
 const int _CS    = 15;
@@ -20,6 +21,11 @@ const int _SID   = 23; // Mosi
 Nokia105 display( _SID,  _SCLK, _RESET, _CS);
 
 extern "C" void app_main(void) {
+
+//--------init wifi------------------
+initWifi();
+/////////////////////////////////////
+
 //-----init-timer interrupt----------
 init_Interrupt_Timer0_Sec ();
 /////////////////////////////////
@@ -68,7 +74,7 @@ display.printString("Pow:",1,70,GREEN,BLACK); //there are problem in 0 printing
 display.printString("W",112,70,GREEN,BLACK);
 display.printDigitFloat(w,4,50,70,GREEN,BLACK);
 
-
+sendtowifi(&vcc,&raw,&i);
 vTaskDelay(pdMS_TO_TICKS(100)); //delay
 }// end of while
 }//end of main
