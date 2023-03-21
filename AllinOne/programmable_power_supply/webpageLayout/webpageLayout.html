@@ -14,10 +14,9 @@
                        .card { background-color: white; box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5); }
                        .cards { max-width: 700px; margin: 0 auto; display: grid; grid-gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
                        .reading { font-size: 2.8rem; }
-                       .card.temperature { color: #0e7c7b; }
-                       .card.humidity { color: #17bebb; }
-                       .card.pressure { color: #3fca6b; }
-                       .card.gas { color: #d62246; }
+                       .card.Voltages { color: #0e7c7b; }
+                       .card.Raw ADC { color: #17bebb; }
+                       .card.Current { color: #3fca6b; }           
                      </style>
                    </head>
                    <body>
@@ -26,13 +25,13 @@
                      </div>
                      <div class=\content\>
                        <div class=\cards\>
-                         <div class=\card temperature\>
+                         <div class=\card Voltages\>
                            <h4><i class=\fas fa-thermometer-half\></i> Voltages</h4><p><span class=\reading\>%f V</span></p>
                          </div>
-                         <div class=\card humidity\>
+                         <div class=\card Raw ADC\>
                            <h4><i class=\fas fa-tint\></i> Raw ADC</h4><p><span class=\reading\>%f </span></p>
                          </div>
-                         <div class=\card pressure\>
+                         <div class=\card Current\>
                            <h4><i class=\fas fa-angle-double-down\></i> Current</h4><p><span class=\reading\>%.3f A</span></p>
                          </div>
                        </div>
