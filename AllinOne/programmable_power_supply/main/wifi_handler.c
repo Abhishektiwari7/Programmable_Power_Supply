@@ -5,56 +5,112 @@
 //-------data stream html----------------------------------------
 float vol,curr;
 uint16_t rawadc;
-//https://somsakelect.com/converter/text-to-string-converter.html
 char html_page[] = "<!DOCTYPE HTML><html>\n"
-                   "<head>\n"
-                   "  <title>ESP-IDF Programmable Power Supply Web Server</title>\n"
-                  // "  <meta http-equiv=\"refresh\" content=\"5\">\n"
-                   "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
-                   "  <link rel=\"stylesheet\" href=\"https://use.fontawesome.com/releases/v5.7.2/css/all.css\" integrity=\"sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr\" crossorigin=\"anonymous\">\n"
-                   "  <link rel=\"icon\" href=\"data:,\">\n"
-                   "  <style>\n"
-                   "    html {font-family: Arial; display: inline-block; text-align: center;}\n"
-                   "    p {  font-size: 1.2rem;}\n"
-                   "    body {  margin: 0;}\n"
-                   "    .topnav { overflow: hidden; background-color: #4B1D3F; color: white; font-size: 1.7rem; }\n"
-                   "    .content { padding: 20px; }\n"
-                   "    .card { background-color: white; box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5); }\n"
-                   "    .cards { max-width: 700px; margin: 0 auto; display: grid; grid-gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }\n"
-                   "    .reading { font-size: 2.8rem; }\n"
-                   "    .card.temperature { color: #0e7c7b; }\n"
-                   "    .card.humidity { color: #17bebb; }\n"
-                   "    .card.pressure { color: #3fca6b; }\n"
-                   "    .card.gas { color: #d62246; }\n"
-                   "  </style>\n"
-                   "</head>\n"
-                   "<body>\n"
-                   "  <div class=\"topnav\">\n"
-                   "    <h3>ESP-IDF Programmable Power Supply Web Server</h3>\n"
-                   "  </div>\n"
-                   "  <div class=\"content\">\n"
-                   "    <div class=\"cards\">\n"
-                   "      <div class=\"card temperature\">\n"
-                   "        <h4><i class=\"fas fa-thermometer-half\"></i> Voltage</h4><p><span class=\"reading\">%.4f V</span></p>\n"
-                   "      </div>\n"
-                   "      <div class=\"card humidity\">\n"
-                   "        <h4><i class=\"fas fa-tint\"></i> RAW ADC</h4><p><span class=\"reading\">%d</span></p>\n"
-                   "      </div>\n"
-                   "      <div class=\"card pressure\">\n"
-                   "        <h4><i class=\"fas fa-angle-double-down\"></i> Current</h4><p><span class=\"reading\">%.3f A</span></p>\n"
-                   "      </div>\n"
-                   "    </div>\n"
-                   "  </div>\n"
-                   " <form action=\"/get\">\n"
-                   " Set Voltage: <input type=\"text\" name=\"v_\">\n"
-                   " <input type=\"submit\" value=\"Submit\">\n"
-                   "</form><br>\n"
-                   " <form action=\"/get\">\n"
-                   " Set Current: <input type=\"text\" name=\"a_\">\n"
-                   " <input type=\"submit\" value=\"Submit\">\n"
-                   "</form><br>\n"
-                   "</body>\n"
-                   "</html>";
+"<head>\n"
+"  <title>ESP-IDF Programmable Power Supply Web Server</title>\n"
+"  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
+"  <link rel=\"stylesheet\" href=\"https://use.fontawesome.com/releases/v5.7.2/css/all.css\" integrity=\"sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr\" crossorigin=\"anonymous\">\n"
+"  <link rel=\"icon\" href=\"data:,\">\n"
+"  <style>\n"
+"    html {font-family: Arial; display: inline-block; text-align: center;}\n"
+"    p {  font-size: 1.2rem;}\n"
+"    body {  margin: 0;}\n"
+"    .topnav { overflow: hidden; background-color: #4B1D3F; color: white; font-size: 1.7rem; }\n"
+"    .content { padding: 20px; }\n"
+"    .card { background-color: white; box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5); }\n"
+"    .cards { max-width: 700px; margin: 0 auto; display: grid; grid-gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }\n"
+"    .reading { font-size: 2.8rem; }\n"
+"    .head { font-size: 1.1rem; }\n"
+"    .card.voltage { color: #0e7c7b; }\n"
+"    .card.raw_adc { color: #17bebb; }\n"
+"    .card.current { color: #3fca6b; }\n"
+//"    .card.update_me { color: #d62246; }\n"
+"    .input{width: 200px;margin:auto;height:20px;display:block;}\n"
+"    .submitbtn{margin-top:10px;width:100px;height:25px;background-color:green;color:#fff;border-radius:7px;border:none;}\n"
+"  </style>\n"
+"</head>\n"
+"<body>\n"
+"  <div class=\"topnav\">\n"
+"    <h3>ESP-IDF Programmable Power Supply Web Server</h3>\n"
+"  </div>\n"
+"  <div class=\"content\">\n"
+"    <div class=\"cards\">\n"
+"      <div class=\"card voltage\">\n"
+"        <h4><i class=\"fas fa-thermometer-half\"></i> Voltage</h4><p><span class=\"reading\">%.4f V</span></p>\n"
+"      </div>\n"
+"         <div class=\"card voltage\">\n"
+"         <h4> <i class = \"head\"> Set Voltage</i></h4> <form action=\"/get\"> <input type=\"text\" name=\"v_\" placeholder=\"Set Voltage\">\n"
+"         <p> <input type=\"submit\" value=\"Submit\"  class = \"submitbtn\" </p>\n"
+"          </form><br>\n"
+"      </div>\n"
+"     <div class=\"card current\">\n"
+"        <h4><i class=\"fas fa-angle-double-down\"></i> Current</h4><p><span class=\"reading\">%.3f A</span></p>\n"
+"      </div>\n"
+"           <div class=\"card current\">\n"
+"         <h4><i class = \"head\">  Set Current</i></h4> <form action=\"/get\"> <input type=\"text\" name=\"v_\" placeholder=\"Set Current\">\n"
+"         <p> <input type=\"submit\"  value=\"Submit\"  class = \"submitbtn\" </p>\n"
+"          </form><br>\n"
+"      </div>\n"
+"    </div>\n"
+"  </div>\n"
+"    <div class=\"content\">\n"
+"    <div class=\"cards\">\n"
+"     <div class=\"card raw_adc\">\n"
+"        <h4><i class=\"fas fa-tint\"></i> RAW ADC</h4><p><span class=\"reading\">%d</span></p>\n"
+"      </div>\n"
+"    </div>\n"
+"  </div>\n"
+"</body>\n"
+"</html>";
+//https://somsakelect.com/converter/text-to-string-converter.html
+  // "  <meta http-equiv=\"refresh\" content=\"5\">\n"
+// char html_page[] = "<!DOCTYPE HTML><html>\n"
+//                    "<head>\n"
+//                    "  <title>ESP-IDF Programmable Power Supply Web Server</title>\n"
+//                    "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
+//                    "  <link rel=\"stylesheet\" href=\"https://use.fontawesome.com/releases/v5.7.2/css/all.css\" integrity=\"sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr\" crossorigin=\"anonymous\">\n"
+//                    "  <link rel=\"icon\" href=\"data:,\">\n"
+//                    "  <style>\n"
+//                    "    html {font-family: Arial; display: inline-block; text-align: center;}\n"
+//                    "    p {  font-size: 1.2rem;}\n"
+//                    "    body {  margin: 0;}\n"
+//                    "    .topnav { overflow: hidden; background-color: #4B1D3F; color: white; font-size: 1.7rem; }\n"
+//                    "    .content { padding: 20px; }\n"
+//                    "    .card { background-color: white; box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5); }\n"
+//                    "    .cards { max-width: 700px; margin: 0 auto; display: grid; grid-gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }\n"
+//                    "    .reading { font-size: 2.8rem; }\n"
+//                    "    .card.temperature { color: #0e7c7b; }\n"
+//                    "    .card.humidity { color: #17bebb; }\n"
+//                    "    .card.pressure { color: #3fca6b; }\n"
+//                    "  </style>\n"
+//                    "</head>\n"
+//                    "<body>\n"
+//                    "  <div class=\"topnav\">\n"
+//                    "    <h3>ESP-IDF Programmable Power Supply Web Server</h3>\n"
+//                    "  </div>\n"
+//                    "  <div class=\"content\">\n"
+//                    "    <div class=\"cards\">\n"
+//                    "      <div class=\"card temperature\">\n"
+//                    "        <h4><i class=\"fas fa-thermometer-half\"></i> Voltage</h4><p><span class=\"reading\">%.4f V</span></p>\n"
+//                    "      </div>\n"
+//                    "      <div class=\"card humidity\">\n"
+//                    "        <h4><i class=\"fas fa-tint\"></i> RAW ADC</h4><p><span class=\"reading\">%d</span></p>\n"
+//                    "      </div>\n"
+//                    "      <div class=\"card pressure\">\n"
+//                    "        <h4><i class=\"fas fa-angle-double-down\"></i> Current</h4><p><span class=\"reading\">%.3f A</span></p>\n"
+//                    "      </div>\n"
+//                    "    </div>\n"
+//                    "  </div>\n"
+//                    " <form action=\"/get\">\n"
+//                    " Set Voltage: <input type=\"text\" name=\"v_\">\n"
+//                    " <input type=\"submit\" value=\"Submit\">\n"
+//                    "</form><br>\n"
+//                    //" <form action=\"/get\">\n"
+//                    //" Set Current: <input type=\"text\" name=\"a_\">\n"
+//                    //" <input type=\"submit\" value=\"Submit\">\n"
+//                    //"</form><br>\n"
+//                    "</body>\n"
+//                    "</html>";
 /////////////////////////////////////////////////////////////////
 
 // char on_resp[] = "<!DOCTYPE html><html><head><style type=\"text/css\">html {  font-family: Arial;  display: inline-block;  margin: 0px auto;  text-align: center;}h1{  color: #070812;  padding: 2vh;}.button {  display: inline-block;  background-color: #b30000; //red color  border: none;  border-radius: 4px;  color: white;  padding: 16px 40px;  text-decoration: none;  font-size: 30px;  margin: 2px;  cursor: pointer;}.button2 {  background-color: #364cf4; //blue color}.content {   padding: 50px;}.card-grid {  max-width: 800px;  margin: 0 auto;  display: grid;  grid-gap: 2rem;  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));}.card {  background-color: white;  box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5);}.card-title {  font-size: 1.2rem;  font-weight: bold;  color: #034078}</style>  <title>ESP32 WEB SERVER</title>  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">  <link rel=\"icon\" href=\"data:,\">  <link rel=\"stylesheet\" href=\"https://use.fontawesome.com/releases/v5.7.2/css/all.css\"    integrity=\"sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr\" crossorigin=\"anonymous\">  <link rel=\"stylesheet\" type=\"text/css\" ></head><body>  <h2>ESP32 WEB SERVER</h2>  <div class=\"content\">    <div class=\"card-grid\">      <div class=\"card\">        <p><i class=\"fas fa-lightbulb fa-2x\" style=\"color:#c81919;\"></i>     <strong>GPIO2</strong></p>        <p>GPIO state: <strong> ON</strong></p>        <p>          <a href=\"/led2on\"><button class=\"button\">ON</button></a>          <a href=\"/led2off\"><button class=\"button button2\">OFF</button></a>        </p>      </div>    </div>  </div></body></html>";
@@ -189,7 +245,7 @@ esp_err_t send_web_page(httpd_req_t *req)
 
     char response_data[sizeof(html_page) + 50];
     memset(response_data, 0, sizeof(response_data));
-    sprintf(response_data, html_page, vol, rawadc, curr);
+    sprintf(response_data, html_page, vol,curr,rawadc );
     response = httpd_resp_send(req, response_data, HTTPD_RESP_USE_STRLEN);
 
     ///////////////////////
@@ -251,7 +307,7 @@ esp_err_t get_handler_str(httpd_req_t *req) //send value ipaddress/get?str=f or 
     // const char resp[] = "The data was sent ...";
     // httpd_resp_send(req, resp, HTTPD_RESP_USE_STRLEN);
     // return ESP_OK;
-    return send_web_page(req); //return to main
+   return send_web_page(req); //return to main
 }
 
 esp_err_t post_handler(httpd_req_t *req)
@@ -305,7 +361,7 @@ httpd_uri_t uri_get = {
 //     .handler = led_off_handler,
 //     .user_ctx = NULL};
 
-httpd_uri_t uri_get_input = { //get data from html page
+ httpd_uri_t uri_get_input = { //get data from html page
     .uri = "/get",
     .method = HTTP_GET,
     .handler = get_handler_str,
@@ -323,6 +379,8 @@ httpd_handle_t setup_server(void)
 {
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
     httpd_handle_t server = NULL;
+    config.stack_size = 20480; //default stack 4k, 10k
+    //https://www.esp32.com/viewtopic.php?t=10443
 
     if (httpd_start(&server, &config) == ESP_OK)
     {

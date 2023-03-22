@@ -13,13 +13,10 @@
     .card { background-color: white; box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5); }
     .cards { max-width: 700px; margin: 0 auto; display: grid; grid-gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
     .reading { font-size: 2.8rem; }
-    .head { font-size: 1.1rem; }
-    .card.voltage { color: #0e7c7b; }
-    .card.raw_adc { color: #17bebb; }
-    .card.current { color: #3fca6b; }
-    .card.update_me { color: #d62246; }
-    .input{width: 200px;margin:auto;height:20px;display:block;}
-    .submitbtn{margin-top:10px;width:100px;height:25px;background-color:green;color:#fff;border-radius:7px;border:none;}
+    .card.temperature { color: #0e7c7b; }
+    .card.humidity { color: #17bebb; }
+    .card.pressure { color: #3fca6b; }
+    .card.gas { color: #d62246; }
   </style>
 </head>
 <body>
@@ -28,30 +25,24 @@
   </div>
   <div class="content">
     <div class="cards">
-      <div class="card voltage">
+      <div class="card temperature">
         <h4><i class="fas fa-thermometer-half"></i> Voltage</h4><p><span class="reading">1.2000 V</span></p>
       </div>
-         <div class="card voltage">
-         <h4> <i class = "head"> Set Voltage</i></h4> <form action="/get"> <input type="text" name="v_" placeholder="Set Voltage">
-         <p> <input type="submit" value="Submit"  class = "submitbtn" </p>
-          </form><br>
-      </div>
-     <div class="card current">
-        <h4><i class="fas fa-angle-double-down"></i> Current</h4><p><span class="reading">1.125 A</span></p>
-      </div>
-           <div class="card current">
-         <h4><i class = "head">  Set Current</i></h4> <form action="/get"> <input type="text" name="v_" placeholder="Set Current">
-         <p> <input type="submit"  value="Submit"  class = "submitbtn" </p>
-          </form><br>
-      </div>
-    </div>
-  </div>
-    <div class="content">
-    <div class="cards">
-     <div class="card raw_adc">
+      <div class="card humidity">
         <h4><i class="fas fa-tint"></i> RAW ADC</h4><p><span class="reading">6400</span></p>
       </div>
+      <div class="card pressure">
+        <h4><i class="fas fa-angle-double-down"></i> Current</h4><p><span class="reading">1.125 A</span></p>
+      </div>
     </div>
   </div>
+ <form action="/get">
+ Set Voltage: <input type="text" name="v_">
+ <input type="submit" value="Submit">
+</form><br>
+ <form action="/get">
+ Set Current: <input type="text" name="a_">
+ <input type="submit" value="Submit">
+</form><br>
 </body>
 </html>
