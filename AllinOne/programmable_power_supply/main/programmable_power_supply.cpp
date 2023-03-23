@@ -11,6 +11,7 @@
 #include "common.h" //simple function of adc , dac
 #include "interruptHandler.h" //timer and gpio interrupt
 #include "wifi_handler.h" //init wifi
+#include "rotaryEncoderHandler.h" //rotary encoder
 
 //---bitbang pins------------------------------
 const int _CS    = 15;
@@ -52,6 +53,11 @@ init_peripherals ();
 init_Adc_Config ();
 set_Dac_Voltage (1500); //12 bit dac
 /////////////////////////////////////////////////////////////////////////////
+
+//-------init Rotary Encoder-------------------------------------------------
+init_Rotary_Encoder ();
+////////////////////////////////////////////////////////////////////////////
+
 while (1) {
 float vcc = 0;
 float i = 1.1253;
@@ -76,5 +82,6 @@ display.printDigitFloat(w,4,50,70,GREEN,BLACK);
 
 sendtowifi(&vcc,&raw,&i);
 vTaskDelay(pdMS_TO_TICKS(100)); //delay
+read_Rotary_Encoder ();
 }// end of while
 }//end of main
