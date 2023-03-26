@@ -12,6 +12,11 @@
 #include "interruptHandler.h" //timer and gpio interrupt
 #include "wifi_handler.h" //init wifi
 #include "rotaryEncoderHandler.h" //rotary encoder
+#include "mosfetHandler.h" //mosfet pwm
+
+//-------variables----------
+
+////////////////////////////
 
 //---bitbang pins------------------------------
 const int _CS    = 15;
@@ -29,16 +34,22 @@ initWifi();
 
 //-----init-timer interrupt----------
 init_Interrupt_Timer0_Sec ();
+init_Interrupt_Timer1_MSec (); //for switch handler
 /////////////////////////////////
 
 //----init-switch pin---------
 init_Interrupt_Gpio (); 
-//use me for debounce: https://github.com/khoih-prog/ESP32TimerInterrupt/blob/master/examples/SwitchDebounce/SwitchDebounce.ino
 //////////////////////////////
+
+//----mosfet--pwm--init-----------
+initMosfetHandler ();
+setPwmMosfet (100);
+////////////////////////////////////
 
 gpio_reset_pin(GPIO_LED);
 gpio_set_direction(GPIO_LED,GPIO_MODE_OUTPUT);
 //gpio_set_level(GPIO_LED,1);
+
 //---------------------DISPLAY SETUP----------------------------------------
 display.initDisplay();
 display.PWMinit();
@@ -48,6 +59,7 @@ display.backgroundColor(BLUE);
 display.displayClear();
 ESP_LOGI(TAG, "APP main - Display Setup Completed, Functions are Activated");
 /////////////////////////////////////////////////////////////////////////////
+
 //---------dac adc init-----------------------------------------------------
 init_peripherals ();
 init_Adc_Config ();
@@ -62,7 +74,6 @@ while (1) {
 float vcc = 0;
 float i = 1.1253;
 float w = 12.3423;
-
 uint16_t raw = 0;
 vcc = printADC_Count_Voltage (&raw);
 display.printString("Volt:",1,10,GREEN,BLACK); //there are problem in 0 printing
@@ -82,6 +93,7 @@ display.printDigitFloat(w,4,50,70,GREEN,BLACK);
 
 sendtowifi(&vcc,&raw,&i);
 vTaskDelay(pdMS_TO_TICKS(100)); //delay
-read_Rotary_Encoder ();
+int count_ = read_Rotary_Encoder ();
+setPwmMosfet (count_);
 }// end of while
 }//end of main

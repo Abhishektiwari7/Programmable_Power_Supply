@@ -27,21 +27,40 @@ static const char *TAG_INT = "Interrupt";
 void init_Interrupt_Timer0_Sec ();
 ///////////////////////////////////////////////////////
 
+//-------init of timer_0 interrupt for milliseconds---------
+void init_Interrupt_Timer1_MSec ();
+///////////////////////////////////////////////////////
+
 //----------attach interrupt gpio to isr handler--------
 void init_Interrupt_Gpio ();
 ////////////////////////////////////////////////////////
 
-//------------switch 3 Interrupt Handdler-------------
-static void IRAM_ATTR gpio_isr_handler_sw2 (void *arg);
-///////////////////////////////////////////////////////
+// //------------switch 0 Interrupt Handdler-------------
+// static void IRAM_ATTR gpio_isr_handler_sw0 (void *arg);
+// ///////////////////////////////////////////////////////
 
-//------------switch 4 Interrupt Handdler-------------
-static void IRAM_ATTR gpio_isr_handler_sw3 (void *arg);
-////////////////////////////////////////////////////////
+// //------------switch 1 Interrupt Handdler-------------
+// static void IRAM_ATTR gpio_isr_handler_sw1 (void *arg);
+// ////////////////////////////////////////////////////////
 
-//-------timer interrupt callback handler---------------
+// //------------switch 2 Interrupt Handdler-------------
+// static void IRAM_ATTR gpio_isr_handler_sw2 (void *arg);
+// ///////////////////////////////////////////////////////
+
+// //------------switch 3 Interrupt Handdler-------------
+// static void IRAM_ATTR gpio_isr_handler_sw3 (void *arg);
+// ////////////////////////////////////////////////////////
+
+//-------timer interrupt callback handler---second------------
 static bool timer_0_sec(gptimer_handle_t timer, const gptimer_alarm_event_data_t *edata, void *user_ctx);
 /////////////////////////////////////////////////////////////
+
+//-------timer interrupt callback handler------millisecond---------
+static bool timer_1_Msec(gptimer_handle_t timer, const gptimer_alarm_event_data_t *edata, void *user_ctx);
+/////////////////////////////////////////////////////////////
+//--------switch handler debounce----------------------------------
+void switchHandlerDebounce ();
+/////////////////////////////////////////////////////////////////////
 
 #endif
 #ifdef __cplusplus

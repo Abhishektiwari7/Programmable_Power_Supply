@@ -18,7 +18,7 @@ extern "C" {
 /////////////////////////////////////////////
 //------functions---------------------------
 void init_Rotary_Encoder ();
-void read_Rotary_Encoder ();
+int read_Rotary_Encoder ();
 
 #endif
 #ifdef __cplusplus

@@ -1,14 +1,14 @@
 #include "rotaryEncoderHandler.h"
 //--------- gpio and encoder value of rotation-----------------
-#define EXAMPLE_PCNT_HIGH_LIMIT 100
-#define EXAMPLE_PCNT_LOW_LIMIT  -100
-#define EXAMPLE_EC11_GPIO_A 0
-#define EXAMPLE_EC11_GPIO_B 2
+#define EXAMPLE_PCNT_HIGH_LIMIT 150
+#define EXAMPLE_PCNT_LOW_LIMIT  -1
+#define EXAMPLE_EC11_GPIO_A 26
+#define EXAMPLE_EC11_GPIO_B 25
 ////////////////////////////////////////////////////////////////
 
 //---------------Report counter value--------------------------
 int pulse_count = 0;
-int event_count = 0;
+volatile int event_count = 0;
 static const char *TAG_Encoder = "Rotary_Encoder";
 ///////////////////////////////////////////////////////////
 
@@ -20,13 +20,13 @@ pcnt_unit_handle_t pcnt_unit = NULL;
 ////////////////////////////////////////////////////////////
 
 //---------------call back of count--------------------------------------------------------------------------------
-static bool example_pcnt_on_reach(pcnt_unit_handle_t unit, const pcnt_watch_event_data_t *edata, void *user_ctx) {
-    BaseType_t high_task_wakeup;
-    QueueHandle_t queue = (QueueHandle_t)user_ctx;
-    // send event data to queue, from this interrupt callback
-    xQueueSendFromISR(queue, &(edata->watch_point_value), &high_task_wakeup);
-    return (high_task_wakeup == pdTRUE);
-}
+// static bool example_pcnt_on_reach(pcnt_unit_handle_t unit, const pcnt_watch_event_data_t *edata, void *user_ctx) {
+//     BaseType_t high_task_wakeup;
+//     QueueHandle_t queue = (QueueHandle_t)user_ctx;
+//     // send event data to queue, from this interrupt callback
+//     xQueueSendFromISR(queue, &(edata->watch_point_value), &high_task_wakeup);
+//     return (high_task_wakeup == pdTRUE);
+// }
 ////////////////////////////////////////////////////////////////////////////////
 //-------------init the pin------------------------------------------------------
 void init_Rotary_Encoder () {
@@ -59,22 +59,22 @@ void init_Rotary_Encoder () {
     ESP_ERROR_CHECK(pcnt_new_channel(pcnt_unit, &chan_b_config, &pcnt_chan_b));
 
     ESP_LOGI(TAG_Encoder, "set edge and level actions for pcnt channels");
-    ESP_ERROR_CHECK(pcnt_channel_set_edge_action(pcnt_chan_a, PCNT_CHANNEL_EDGE_ACTION_DECREASE, PCNT_CHANNEL_EDGE_ACTION_INCREASE));
-    ESP_ERROR_CHECK(pcnt_channel_set_level_action(pcnt_chan_a, PCNT_CHANNEL_LEVEL_ACTION_KEEP, PCNT_CHANNEL_LEVEL_ACTION_INVERSE));
-    ESP_ERROR_CHECK(pcnt_channel_set_edge_action(pcnt_chan_b, PCNT_CHANNEL_EDGE_ACTION_INCREASE, PCNT_CHANNEL_EDGE_ACTION_DECREASE));
-    ESP_ERROR_CHECK(pcnt_channel_set_level_action(pcnt_chan_b, PCNT_CHANNEL_LEVEL_ACTION_KEEP, PCNT_CHANNEL_LEVEL_ACTION_INVERSE));
+    ESP_ERROR_CHECK(pcnt_channel_set_edge_action(pcnt_chan_a, PCNT_CHANNEL_LEVEL_ACTION_KEEP, PCNT_CHANNEL_EDGE_ACTION_INCREASE));
+    // ESP_ERROR_CHECK(pcnt_channel_set_level_action(pcnt_chan_a, PCNT_CHANNEL_LEVEL_ACTION_KEEP, PCNT_CHANNEL_LEVEL_ACTION_INVERSE));
+    // ESP_ERROR_CHECK(pcnt_channel_set_edge_action(pcnt_chan_b, PCNT_CHANNEL_EDGE_ACTION_INCREASE, PCNT_CHANNEL_EDGE_ACTION_DECREASE));
+     ESP_ERROR_CHECK(pcnt_channel_set_level_action(pcnt_chan_b, PCNT_CHANNEL_LEVEL_ACTION_KEEP, PCNT_CHANNEL_LEVEL_ACTION_INVERSE));
 
-    ESP_LOGI(TAG_Encoder, "add watch points and register callbacks");
-    int watch_points[] = {EXAMPLE_PCNT_LOW_LIMIT, -50, 0, 50, EXAMPLE_PCNT_HIGH_LIMIT};
-    for (size_t i = 0; i < sizeof(watch_points) / sizeof(watch_points[0]); i++) {
-        ESP_ERROR_CHECK(pcnt_unit_add_watch_point(pcnt_unit, watch_points[i]));
-    }
-    pcnt_event_callbacks_t cbs = {
-        .on_reach = example_pcnt_on_reach,
-    };
-    QueueHandle_t queue = xQueueCreate(10, sizeof(int));
-    ESP_ERROR_CHECK(pcnt_unit_register_event_callbacks(pcnt_unit, &cbs, queue));
-    queue_global = queue; //copty to global queue for usable in other appications
+    // ESP_LOGI(TAG_Encoder, "add watch points and register callbacks");
+    // int watch_points[] = {EXAMPLE_PCNT_LOW_LIMIT, -50, 0, 50, EXAMPLE_PCNT_HIGH_LIMIT};
+    // for (size_t i = 0; i < sizeof(watch_points) / sizeof(watch_points[0]); i++) {
+    //     ESP_ERROR_CHECK(pcnt_unit_add_watch_point(pcnt_unit, watch_points[i]));
+    // }
+    // pcnt_event_callbacks_t cbs = {
+    //     .on_reach = example_pcnt_on_reach,
+    // };
+    // QueueHandle_t queue = xQueueCreate(10, sizeof(int));
+    // ESP_ERROR_CHECK(pcnt_unit_register_event_callbacks(pcnt_unit, &cbs, queue));
+    // queue_global = queue; //copty to global queue for usable in other appications
     ESP_LOGI(TAG_Encoder, "enable pcnt unit");
     ESP_ERROR_CHECK(pcnt_unit_enable(pcnt_unit));
     ESP_LOGI(TAG_Encoder, "clear pcnt unit");
@@ -92,14 +92,15 @@ void init_Rotary_Encoder () {
 //////////////////////////////////////////////////////////////////////////
 
 //-----------------print the read value from encoder-----------------------
-void read_Rotary_Encoder () {
-// Report counter value
-if (xQueueReceive(queue_global, &event_count, pdMS_TO_TICKS(1000))) {
-    ESP_LOGI(TAG_Encoder, "Watch point event, count: %d", event_count);
-} else {
+int read_Rotary_Encoder () {
+// // Report counter value
+// if (xQueueReceive(queue_global, &event_count, pdMS_TO_TICKS(1000))) {
+//     ESP_LOGI(TAG_Encoder, "Watch point event, count: %d", event_count);
+// } else {
     ESP_ERROR_CHECK(pcnt_unit_get_count(pcnt_unit, &pulse_count));
     ESP_LOGI(TAG_Encoder, "Pulse count: %d", pulse_count);
-}
-vTaskDelay(pdMS_TO_TICKS(1000));
+// }
+vTaskDelay(pdMS_TO_TICKS(100));
+return pulse_count;
 }
 ////////////////////////////////////////////////////////////////////////////

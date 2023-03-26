@@ -9,6 +9,7 @@ char html_page[] = "<!DOCTYPE HTML><html>\n"
 "<head>\n"
 "  <title>ESP-IDF Programmable Power Supply Web Server</title>\n"
 "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
+"  <meta http-equiv=\"refresh\" content=\"5\">\n"
 "  <link rel=\"stylesheet\" href=\"https://use.fontawesome.com/releases/v5.7.2/css/all.css\" integrity=\"sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr\" crossorigin=\"anonymous\">\n"
 "  <link rel=\"icon\" href=\"data:,\">\n"
 "  <style>\n"
@@ -200,7 +201,7 @@ void connect_wifi(void)
             .threshold.authmode = WIFI_AUTH_WPA2_PSK,
         },
     };
-    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA)); //set mode ap / station or both?
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
     ESP_ERROR_CHECK(esp_wifi_start());
 
@@ -412,7 +413,7 @@ void initWifi() {
     gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
 
     //led_state = 0;
-    ESP_LOGI(TAG, "LED Control Web Server is running ... ...\n");
+    ESP_LOGI(TAG, "Control Web Server is running ... ...\n");
     setup_server();
 }
 
