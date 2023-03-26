@@ -24,7 +24,7 @@ extern "C"
 const int MOSFET_PWM = 27;
 
 // // Set the LEDC peripheral configuration
-#define MOSFET_TIMER LEDC_TIMER_0
+#define MOSFET_TIMER LEDC_TIMER_2 //timer 0 already being used for lcd brightness
 #define MOSFET_MODE LEDC_HIGH_SPEED_MODE
 #define MOSFET_OUTPUT_IO MOSFET_PWM // Define the output GPIO
 #define MOSFET_CHANNEL LEDC_CHANNEL_1

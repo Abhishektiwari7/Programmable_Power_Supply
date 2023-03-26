@@ -3,6 +3,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
+#include "esp_err.h" //error
 #include "driver/gpio.h"
 #include "math.h"
 #include "driver/gptimer.h" //for timers
@@ -15,8 +16,12 @@
 #include "mosfetHandler.h" //mosfet pwm
 
 //-------variables----------
-
+float vcc = 0;
+int Mpwm = 70;
 ////////////////////////////
+//----------functions defines------------------
+
+////////////////////////////////////////////////
 
 //---bitbang pins------------------------------
 const int _CS    = 15;
@@ -71,11 +76,11 @@ init_Rotary_Encoder ();
 ////////////////////////////////////////////////////////////////////////////
 
 while (1) {
-float vcc = 0;
 float i = 1.1253;
 float w = 12.3423;
 uint16_t raw = 0;
 vcc = printADC_Count_Voltage (&raw);
+// vcc = vcc *10; //opamp, 0.1 gain.
 display.printString("Volt:",1,10,GREEN,BLACK); //there are problem in 0 printing
 display.printDigitFloat(vcc,4,50,10,GREEN,BLACK);
 display.printString("V",112,10,GREEN,BLACK);
@@ -94,6 +99,24 @@ display.printDigitFloat(w,4,50,70,GREEN,BLACK);
 sendtowifi(&vcc,&raw,&i);
 vTaskDelay(pdMS_TO_TICKS(100)); //delay
 int count_ = read_Rotary_Encoder ();
-setPwmMosfet (count_);
+// setPwmMosfet (count_); //set pwm by rotary encoder
+//----testing--maintain set voltage-----------------------
+if (5 > (vcc )) {  //read voltage less than set voltage, increment in pwm
+    if (4096 < Mpwm) { //constarin pwm
+        Mpwm = 4095;
+    }
+    Mpwm = Mpwm + 1;
+} else if (5 < (vcc )) { //read voltage more than set voltage, decrement in pwm
+    if (0 > Mpwm) { //constarin pwm
+        Mpwm = 0;
+    }
+    Mpwm = Mpwm - 1;
+}
+if ((vcc < 0)) { //starting boost
+Mpwm = 600;
+}
+setPwmMosfet (Mpwm); //12 bit timer: 4096, 72:  | 100: | 600: 14.83%  | 1500: 36.63% | 3000: 73.2% , 4000: 97.75%, 4095: 99.98%
+ESP_LOGI(TAG, "Mosfet pwm: %d ",Mpwm);  //esp_rom_delay_us(1); esp idf version 5 ets delay name change 
+//---------------------------------------------------
 }// end of while
 }//end of main

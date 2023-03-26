@@ -100,7 +100,7 @@ int read_Rotary_Encoder () {
     ESP_ERROR_CHECK(pcnt_unit_get_count(pcnt_unit, &pulse_count));
     ESP_LOGI(TAG_Encoder, "Pulse count: %d", pulse_count);
 // }
-vTaskDelay(pdMS_TO_TICKS(100));
+//vTaskDelay(pdMS_TO_TICKS(100));
 return pulse_count;
 }
 ////////////////////////////////////////////////////////////////////////////
