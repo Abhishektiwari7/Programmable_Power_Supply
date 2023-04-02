@@ -98,7 +98,7 @@ static esp_err_t i2c_handle_write(uint8_t dev_adr, uint8_t w_adr, uint8_t w_len,
   ret_err += i2c_master_write(cmd, buff, w_len, true);
   ret_err += i2c_master_stop(cmd);
 
-  ret_err += i2c_master_cmd_begin(I2C_NUM_0, cmd, pdMS_TO_TICKS(500));
+  ret_err += i2c_master_cmd_begin(I2C_NUM_0, cmd, pdMS_TO_TICKS(100)); //500ms
   i2c_cmd_link_delete(cmd);
   
   return ret_err;
@@ -123,7 +123,7 @@ static esp_err_t i2c_handle_read(uint8_t dev_adr, uint8_t r_adr, uint8_t r_len, 
   ret_err += i2c_master_read_byte(cmd, buff + r_len-1, I2C_MASTER_NACK);
   ret_err += i2c_master_stop(cmd);
 
-  ret_err += i2c_master_cmd_begin(I2C_NUM_0, cmd, pdMS_TO_TICKS(500));
+  ret_err += i2c_master_cmd_begin(I2C_NUM_0, cmd, pdMS_TO_TICKS(100)); //500ms
   i2c_cmd_link_delete(cmd);    
 
   return ret_err; 

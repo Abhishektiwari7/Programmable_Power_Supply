@@ -29,7 +29,9 @@ volatile bool SW2_Pressed          = false;
 volatile bool cur_Switch_State_3 = 0;
 volatile bool SW3_Pressed          = false;
 ////////////////////////////////////////////////
-
+//----timer variables--------------------------
+volatile uint8_t count = 1; //5 second tick alarm for wifi
+/////////////////////////////////////////////////
 //------------switch 1 Interrupt Handdler-------------
 static void IRAM_ATTR gpio_isr_handler_sw0 (void *arg) {
 //gpio_set_level(GPIO_LED,0);
@@ -75,6 +77,7 @@ BaseType_t high_task_awoken = pdFALSE;
 static bool ON;
 ON = !ON;  
 gpio_set_level(GPIO_LED, ON);
+alarm_5_second_tick();
 // return whether we need to yield at the end of ISR
 return high_task_awoken == pdTRUE;
 }
@@ -281,3 +284,14 @@ if ( cur_Switch_State_3 == 1 ) { // Start debouncing counting debounceCountSWPre
 }
 } //end of switchhandler
 ///////////////////////////////////////////////////////////////////////////////////
+
+//---------5 second timer alarm----------------------------------------------------
+volatile uint8_t alarm_5_second_tick() {
+count++;
+if (count > 1000) {
+count = 1;
+}
+// ESP_DRAM_LOGI(TAG_INT, "alarm_5_second_tick(): 5 second timer count: %d",count);
+return count;
+}
+////////////////////////////////////////////////////////////////////////////////////

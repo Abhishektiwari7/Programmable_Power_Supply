@@ -20,7 +20,7 @@ extern "C" {
 #define SDA_IO (21)                      /*!< gpio number for I2C master data  */
 #define SCL_IO (22)                      /*!< gpio number for I2C master clock */
 
-#define FREQ_HZ (10000)                 /*!< I2C master clock frequency */
+#define FREQ_HZ (400000)                 /*!< I2C master clock frequency */
 #define TX_BUF_DISABLE (0)               /*!< I2C master doesn't need buffer */
 #define RX_BUF_DISABLE (0)               /*!< I2C master doesn't need buffer */
 

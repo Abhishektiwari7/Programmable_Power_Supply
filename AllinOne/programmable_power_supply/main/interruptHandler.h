@@ -61,6 +61,9 @@ static bool timer_1_Msec(gptimer_handle_t timer, const gptimer_alarm_event_data_
 //--------switch handler debounce----------------------------------
 void switchHandlerDebounce ();
 /////////////////////////////////////////////////////////////////////
+//-----------5 second alarm tick-----------------------------------
+volatile uint8_t alarm_5_second_tick();
+///////////////////////////////////////////////////////////////////
 
 #endif
 #ifdef __cplusplus

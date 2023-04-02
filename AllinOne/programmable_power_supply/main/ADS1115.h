@@ -58,6 +58,7 @@ extern "C" {
 #define ADS1115_CFG_LS_DR_1600SPS         0x80   // default
 #define ADS1115_CFG_LS_DR_2400SPS         0xA0
 #define ADS1115_CFG_LS_DR_3300SPS         0xC0
+#define ADS1115_CFG_LS_DR_860SPS         0xE0 //DATASHEET 860SPS
 
 #define ADS1115_CFG_LS_COMP_MODE_TRAD     0x00   // default
 #define ADS1115_CFG_LS_COMP_MODE_WIN      0x10
