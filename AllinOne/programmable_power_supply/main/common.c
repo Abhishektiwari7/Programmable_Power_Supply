@@ -53,7 +53,7 @@ ADS1115_initiate(&ads1115_cfg);
 
 //--------set dac output voltage-----------------
 void set_Dac_Voltage (uint16_t dac_Count) {
-ESP_LOGI(TAG_COMMON,"Set DAC..");
+ESP_LOGI(TAG_COMMON,"Set DAC 12 bit: %d",dac_Count);
 if (dac_Count > 4095) {
 dac_Count = 4095 ;
 }

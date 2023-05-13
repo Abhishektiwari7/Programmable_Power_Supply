@@ -29,6 +29,8 @@ void setPwmMosfet (uint32_t mPwm) {
 //    } else if (mPwm < 20 ) {
 //       mPwm = 20;  //min
 //    }
-ESP_ERROR_CHECK(ledc_set_duty(MOSFET_MODE, MOSFET_CHANNEL, mPwm));
-ESP_ERROR_CHECK(ledc_update_duty(MOSFET_MODE, MOSFET_CHANNEL));
+// ESP_ERROR_CHECK(ledc_set_duty(MOSFET_MODE, MOSFET_CHANNEL, mPwm));
+// ESP_ERROR_CHECK(ledc_update_duty(MOSFET_MODE, MOSFET_CHANNEL));
+ledc_set_duty(MOSFET_MODE, MOSFET_CHANNEL, mPwm);
+ledc_update_duty(MOSFET_MODE, MOSFET_CHANNEL);
 }

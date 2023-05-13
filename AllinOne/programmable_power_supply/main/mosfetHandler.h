@@ -28,8 +28,8 @@ const int MOSFET_PWM = 27;
 #define MOSFET_MODE LEDC_HIGH_SPEED_MODE
 #define MOSFET_OUTPUT_IO MOSFET_PWM // Define the output GPIO
 #define MOSFET_CHANNEL LEDC_CHANNEL_1
-#define MOSFET_DUTY_RES LEDC_TIMER_12_BIT // LEDC_TIMER_13_BIT //for 5khz Set duty resolution to 13 bits
-#define MOSFET_FREQUENCY (180*100)        //(5000) // Frequency in Hertz. Set frequency at 5 kHz
+#define MOSFET_DUTY_RES LEDC_TIMER_10_BIT //LEDC_TIMER_12_BIT // LEDC_TIMER_13_BIT //for 5khz Set duty resolution to 13 bits
+#define MOSFET_FREQUENCY (200*100)        //(5000) // Frequency in Hertz. Set frequency at 5 kHz
 //////////////////////////////////////////////
 
 //-------------functions--------------------

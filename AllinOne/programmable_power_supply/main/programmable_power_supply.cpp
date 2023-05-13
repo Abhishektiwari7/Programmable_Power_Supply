@@ -34,6 +34,8 @@ float i         = 1.1253;
 float w         = 12.3423;
 uint16_t raw    = 0;
 int count_      = 0;
+uint16_t set_Voltage_dac_buck = 0; //set dac voltage
+uint16_t pre_set_Voltage_dac_buck = 0; //to check input encoder count change then oly update dac not everytime
 //////////////////////////////////////
 
 //----------functions defines------------------
@@ -171,27 +173,34 @@ initWifi();
 /////////////////////////////////////
 
 while (1) {
-if ( alarm_5_second_tick() == 5) {
-ESP_LOGI(TAG, "\t--Sending data to WiFi--\t\n");
-sendtowifi(&vcc,&raw,&i); //set some timer in which data will send
-}
-vTaskDelay(1);
-//----testing--maintain set voltage-----------------------
-if (7 > (vcc )) {  //read voltage less than set voltage, increment in pwm
-    Mpwm = Mpwm - 1;
-    if (0 > Mpwm) { //constarin pwm
-        Mpwm = 500;
-    }
-} else if (7 < (vcc )) { //read voltage more than set voltage, decrement in pwm
-    Mpwm = Mpwm + 1;
-}
-//------constarin pwm in range--------------------
-if (4096 < Mpwm) { //constarin pwm
-    Mpwm = 4095;
-} 
+// if ( alarm_5_second_tick() == 5) {
+// ESP_LOGI(TAG, "\t--Sending data to WiFi--\t\n");
+// sendtowifi(&vcc,&raw,&i); //set some timer in which data will send
+// }
+vTaskDelay(1); //dont starve other
+// esp_rom_delay_us(9000);
+// //----testing--maintain set voltage-----------------------
+// if (7 > (vcc )) {  //read voltage less than set voltage, increment in pwm
+//      if (0 > Mpwm) { //constarin pwm
+//         Mpwm = 2;
+//     }
+//     Mpwm = Mpwm - 1;
+// } else if (7 < (vcc )) { //read voltage more than set voltage, decrement in pwm
+//     Mpwm = Mpwm + 1;
+// }
+// //------constarin pwm in range--------------------
+// if (1024 < Mpwm) { //constarin pwm
+//     Mpwm = 1024;
+// } 
 
-setPwmMosfet (Mpwm); //12 bit timer: 4096, 72:  | 100: | 600: 14.83%  | 1500: 36.63% | 3000: 73.2% , 4000: 97.75%, 4095: 99.98%
-ESP_LOGI(TAG, "readMosfet pwm: %d, set voltage: 7, read Voltage: %f ",Mpwm,vcc);  //esp_rom_delay_us(1); esp idf version 5 ets delay name change 
+// setPwmMosfet (Mpwm); //12 bit timer: 4096, 72:  | 100: | 600: 14.83%  | 1500: 36.63% | 3000: 73.2% , 4000: 97.75%, 4095: 99.98%
+// esp_rom_delay_us(10);
+//ESP_LOGI(TAG, "readMosfet pwm: %d, set voltage: 7, read Voltage: %f ",Mpwm,vcc);  //esp_rom_delay_us(1); esp idf version 5 ets delay name change 
+set_Voltage_dac_buck = count_ * 50 ;
+if (set_Voltage_dac_buck != pre_set_Voltage_dac_buck) { //set once until need to update
+pre_set_Voltage_dac_buck = set_Voltage_dac_buck;
+set_Dac_Voltage (set_Voltage_dac_buck); //12 bit dac //set voltage pwm tl494 update
+}
 } //end of while
 }//end of task
 /////////////////////////////////////////////////////////////////////////////////
@@ -201,7 +210,8 @@ void adc_thread_0(void *pvParameters) {
 ESP_LOGI(pcTaskGetName(NULL), "ADC_Thread_0");
 while (1) {
 vTaskDelay(1);
-vcc = printADC_Count_Voltage (&raw) * 10; //opamp, 0.1 gain.
+//vcc = printADC_Count_Voltage (&raw) * 10; //opamp, 0.1 gain.
+vcc = printADC_Count_Voltage (&raw);
 } //end of while
 }//end of task
 /////////////////////////////////////////////////////////////////////////////////
