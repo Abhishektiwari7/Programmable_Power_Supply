@@ -33,14 +33,15 @@ uint16_t raw_adc_count;
 #define ready_pin 34 
 ////////////////////////////////////////////////////////////////////
 
-//------initialize i2c library-----
+//------initialize i2c and spi library-----
 void init_peripherals () {
-ESP_LOGI(TAG_COMMON,"Set up i2c Config");
+ESP_LOGI(TAG_COMMON,"Set up i2c and spi Config");
 init_I2C ();
-  ESP_LOGI(TAG_COMMON, "intial ready pin gpio34 ");
-  gpio_reset_pin((gpio_num_t)ready_pin);
-  gpio_set_direction((gpio_num_t)ready_pin,GPIO_MODE_INPUT);
-  gpio_set_pull_mode((gpio_num_t)ready_pin,GPIO_PULLUP_ONLY);
+mcp4922_init(GPIO_MOSI,GPIO_SCK,GPIO_CS);    // (MOSI,SCK,CS,LDAC) define Connections 
+ESP_LOGI(TAG_COMMON, "intial ready pin gpio34 ");
+gpio_reset_pin((gpio_num_t)ready_pin);
+gpio_set_direction((gpio_num_t)ready_pin,GPIO_MODE_INPUT);
+gpio_set_pull_mode((gpio_num_t)ready_pin,GPIO_PULLUP_ONLY);
 }
 //////////////////////////////////////////////////
 
@@ -58,6 +59,10 @@ if (dac_Count > 4095) {
 dac_Count = 4095 ;
 }
 mcp4725_set_voltage(mcp4725_t,dac_Count); //100: 1.605v , 12 bit= 4095= 3.29v  
+vTaskDelay(pdMS_TO_TICKS(10)); //settle down
+setDacVoltageMcp4922_CHA(dac_Count,1,0,1);  // bit, gain,buffered,shutDown 
+vTaskDelay(pdMS_TO_TICKS(10)); //settle down
+setDacVoltageMcp4922_CHB(dac_Count,1,0,1);  // bit, gain,buffered,shutDown
 vTaskDelay(pdMS_TO_TICKS(10)); //settle down
 }
 ////////////////////////////////////////////////

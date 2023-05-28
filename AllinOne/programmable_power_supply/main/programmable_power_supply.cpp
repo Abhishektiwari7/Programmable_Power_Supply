@@ -198,9 +198,10 @@ vTaskDelay(1); //dont starve other
 //ESP_LOGI(TAG, "readMosfet pwm: %d, set voltage: 7, read Voltage: %f ",Mpwm,vcc);  //esp_rom_delay_us(1); esp idf version 5 ets delay name change 
 set_Voltage_dac_buck = count_ * 50 ;
 if (set_Voltage_dac_buck != pre_set_Voltage_dac_buck) { //set once until need to update
-pre_set_Voltage_dac_buck = set_Voltage_dac_buck;
-set_Dac_Voltage (set_Voltage_dac_buck); //12 bit dac //set voltage pwm tl494 update
+    pre_set_Voltage_dac_buck = set_Voltage_dac_buck;
+    set_Dac_Voltage (set_Voltage_dac_buck); //12 bit dac //set voltage pwm tl494 update
 }
+
 } //end of while
 }//end of task
 /////////////////////////////////////////////////////////////////////////////////

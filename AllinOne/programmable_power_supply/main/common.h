@@ -16,10 +16,15 @@ extern "C" {
 
 #include "ADS1115.h"
 #include "mcp4725.h"
+#include "MCP4922.h"
 #include "i2c.h"
 /////////////////////////////////////
-
+#define GPIO_MOSI 13
+#define GPIO_SCK  14
+#define GPIO_CS   32
+//#define GPIO_LDAC 
 //----------custom defines----------
+
 static const char *TAG_COMMON = "COMMON";
 ////////////////////////////////////
 
